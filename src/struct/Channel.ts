@@ -49,7 +49,12 @@ export default class Channel {
    */
   public readonly type: StripType;
 
+  /**
+   * Array representation of the strip containing int values for each color.
+   */
   public leds: Uint32Array;
+
+  public brightness: number;
 
   private id: number;
 
@@ -77,27 +82,13 @@ export default class Channel {
     this.type = options.type || StripType.WS2812_STRIP;
     this.driver.channels[id].strip_type = this.type;
 
-    this.driver.channels[id].brightness = options.brightness || 255;
+    this.brightness = options.brightness || 255;
+    this.driver.channels[id].brightness = this.brightness;
 
     this.leds = new Uint32Array(this.count);
 
     Object.defineProperty(this, 'id', { enumerable: false });
     Object.defineProperty(this, 'driver', { enumerable: false });
-    Object.defineProperty(this, 'brightness', { enumerable: true });
-  }
-
-  /**
-   * Get the overall brightness of the strip.
-   */
-  public get brightness(): number {
-    return this.driver.channels[this.id].brightness;
-  }
-
-  /**
-   * Set the strip to the provided brightness.
-   */
-  public set brightness(brightness: number) {
-    this.driver.channels[this.id].brightness = brightness;
   }
 
   /**
@@ -119,6 +110,7 @@ export default class Channel {
    * Drivers render method for convenience. This will call render for all channels.
    */
   public render(): void {
+    this.driver.channels[this.id].brightness = this.brightness;
     this.driver.channels[this.id].leds = this.leds;
     this.driver.render();
   }

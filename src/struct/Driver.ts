@@ -68,6 +68,7 @@ export default class Driver {
   public render(): void {
     for (let i = 0; i < this.channels.length; i += 1) {
       this.driver.channels[i].leds = this.channels[i].leds;
+      this.driver.channels[i].brightness = this.channels[i].brightness;
     }
 
     driver.render();
