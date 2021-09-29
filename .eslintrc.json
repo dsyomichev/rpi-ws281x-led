@@ -13,6 +13,8 @@
     "@typescript-eslint/adjacent-overload-signatures": "error",
     "quotes": ["error", "single", { "allowTemplateLiterals": false }],
     "global-require": "off",
-    "import/no-extraneous-dependencies": "off"
+    "import/no-extraneous-dependencies": "off",
+    "@typescript-eslint/naming-convention": "off",
+    "new-cap": "off"
   }
 }

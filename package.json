@@ -1,23 +1,26 @@
 {
   "name": "rpi-ws281x-led",
-  "version": "1.1.1",
+  "version": "1.1.9",
   "declaration": true,
   "description": "A NodeJS Addon wrapper for the rpi_ws281x library.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "gypfile": true,
+  "engines": {
+    "node": ">=12"
+  },
+  "homepage": "https://github.com/dsyomichev/rpi-ws281x-led",
+  "bugs": "https://github.com/dsyomichev/rpi-ws281x-led/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/dsyomichev/rpi-ws281x-led"
   },
   "license": "MIT",
   "scripts": {
-    "compile": "tsc && node util/dts.js",
+    "compile": "rm -rf dist && tsc && node util/",
     "build": "node-gyp rebuild --silent",
     "pretest": "npm run compile && npm run build",
-    "prepare": "npm run compile",
-    "test": "mocha -r ts-node/register 'test/**/*.ts'",
-    "test:skip": "mocha -r ts-node/register 'test/**/*.ts'"
+    "prepare": "npm run compile"
   },
   "author": "Daniel Syomichev <dsyomichev@gmail.com>",
   "dependencies": {
@@ -42,5 +45,11 @@
     "prettier": "^2.3.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.4.3"
-  }
+  },
+  "keywords": [
+    "led",
+    "strip",
+    "ws281x",
+    "driver"
+  ]
 }

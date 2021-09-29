@@ -1,3 +1,6 @@
+/**
+ * Numerical constants representing the type of lightstrip.
+ */
 enum StripType {
   SK6812_STRIP_RGBW = 0x18100800,
   SK6812_STRIP_RBGW = 0x18100008,

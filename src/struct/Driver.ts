@@ -1,22 +1,40 @@
-import BaseDriver from '../base/BaseDriver';
-import driver from '../core/ws281x';
+import driver, { ws2811 } from '../core/driver';
 import Channel, { ChannelOptions } from './Channel';
 
+/**
+ * Configuration options for the the driver.
+ */
 export interface DriverConfiguration {
   dma?: number;
   frequency?: number;
   channels: ChannelOptions[];
 }
 
+/**
+ * A driver to control led light strips.
+ */
 export default class Driver {
+  /**
+   * The DMA channel being used.
+   */
   public readonly dma: number;
 
+  /**
+   * The frequency that has been set for PWM.
+   */
   public readonly frequency: number;
 
+  /**
+   * Each channel corresponds to a strip and gpio output pin.
+   */
   public readonly channels: Channel[] = [];
 
-  private readonly driver: BaseDriver = driver;
+  private readonly driver: ws2811 = driver;
 
+  /**
+   * Creates a new light strip driver.
+   * @param config - The configuration for this driver.
+   */
   public constructor(config: DriverConfiguration) {
     Object.defineProperty(this, 'driver', { enumerable: false });
 
@@ -31,16 +49,22 @@ export default class Driver {
     }
 
     for (let i = 0; i < config.channels.length; i += 1) {
-      this.channels.push(new Channel(this.driver, this.driver.channel_array[i], config.channels[i]));
+      this.channels.push(new Channel(this.driver, this.driver.channels[i], config.channels[i]));
     }
 
     this.driver.init();
   }
 
+  /**
+   * Shut down the driver. Use before exiting the program.
+   */
   public finalize(): void {
     driver.fini();
   }
 
+  /**
+   * Render the current led buffers to their corresponding strips.
+   */
   public render(): void {
     driver.render();
   }

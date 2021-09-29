@@ -2,9 +2,11 @@
 node_modules/
 src/
 build/
+util/
 types/
 .DS_Store
 *.env
+.prettierrc.json
 .eslintignore
 .eslintrc.json
 .gitignore

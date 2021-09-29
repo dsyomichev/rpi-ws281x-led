@@ -1,8 +1,8 @@
 # rpi-ws281x-led
 
-A NodeJS Addon wrapper for the [rpi_ws281x](https://github.com/jgarff/rpi_ws281x) library. Contains type declarations using Typescript.
+A NodeJS Addon wrapper for the [rpi_ws281x](https://github.com/jgarff/rpi_ws281x) library. Contains type declarations.
 
-#### **This hasn't been tested with physical lightstrips!**
+#### **This has not been tested with hardware yet.**
 
 ## Installing
 
@@ -15,7 +15,7 @@ npm install rpi-ws281x-led
 and then importing it with
 
 ```typescript
-import Driver, { DriverConfiguration, ChannelData, StripType } from 'rpi-ws281x-led';
+import Driver from 'rpi-ws281x-led';
 ```
 
 ## Notes
@@ -24,7 +24,7 @@ import Driver, { DriverConfiguration, ChannelData, StripType } from 'rpi-ws281x-
 
 - Root privledges are required for the driver to work, start the nodejs process as `sudo`.
 
-## API
+## Driver Class
 
 ### `Driver -> constructor(config: DriverConfiguration): Driver`
 
@@ -40,7 +40,7 @@ interface DriverConfiguration {
 }
 
 interface ChannelOptions {
-  gpio?: number; // Default: 18 or 15
+  gpio?: number; // Default: 18 or 13
   invert?: boolean; // Default: false
   count: number;
   type?: StripType; // Default: StripType.WS2812_STRIP
@@ -48,15 +48,20 @@ interface ChannelOptions {
 }
 ```
 
+**Driver Configuration**
+
 - `dma` - The DMA channel to use for the leds.
 - `frequency` - The frequency of the PWM channel.
+
+**Channel Configuration**
+
 - `gpio` - The GPIO pin the driver should use.
 - `invert` - Whether to invert the output signal.
 - `count` - The number of leds to initialize the driver with.
 - `type` - The type of the strip.
 - `brightness` - The brighness of the strip.
 
-A channel will be created for every object with a count in the configuration. The GPIO pin defaults to 18 and then 15 if it is taken.
+A channel will be created for every object with a count in the configuration. The GPIO pin defaults to 18 and then 13 if it is taken.
 
 **Example:**
 
@@ -94,6 +99,8 @@ driver.leds[10] = 0xff00ff;
 driver.render();
 ```
 
+## Channel Class
+
 ### `Channel -> get brighness(): number`
 
 Returns the current brighness of the strip.
@@ -103,7 +110,7 @@ Returns the current brighness of the strip.
 **Example:**
 
 ```typescript
-console.log(driver.brighness);
+console.log(channel.brighness);
 ```
 
 ### `Channel -> set brighness(brighness: number)`
@@ -117,9 +124,9 @@ Set the overall brighness of the strip.
 **Example:**
 
 ```typescript
-driver.brighness = 64;
+channel.brighness = 64;
 
-driver.render();
+channel.render();
 ```
 
 ### `Channel -> get leds(): number`
@@ -131,7 +138,7 @@ Returns the current array of leds on strip.
 **Example:**
 
 ```typescript
-console.log(driver.leds);
+console.log(channel.leds);
 ```
 
 ### `Channel -> set leds(leds: Uint32Array)`
@@ -145,9 +152,9 @@ Update the led values for the entire strip.
 **Example:**
 
 ```typescript
-driver.leds = new Uint32Array(100).fill(0x00ff00);
+channel.leds = new Uint32Array(100).fill(0x00ff00);
 
-driver.render();
+channel.render();
 ```
 
 ## StripType
@@ -173,6 +180,39 @@ enum StripType {
   SK6812_STRIP = WS2811_STRIP_GRB,
   SK6812W_STRIP = SK6812_STRIP_GRBW,
 }
+```
+
+## Setup Example
+
+Setup a dual channel driver with two different types of strips.
+
+```typescript
+import Driver from 'rpi-ws281x-led';
+
+// Create the driver. It automatically initializes the underlying components.
+const driver = new Driver({
+  freq: 800000,
+  channels: [
+    {
+      gpio: 18,
+      count: 100,
+      type: StripType.WS2812_STRIP,
+      brightness: 64,
+    },
+    {
+      gpio: 13,
+      count: 200,
+      type: StripType.WS2811_STRIP_RGB,
+      brightness: 255,
+    },
+  ],
+});
+
+const channel1 = driver.channels[0];
+
+channel1.leds[50] = 0xffff00;
+
+channel1.render(); // OR driver.render();
 ```
 
 ## License

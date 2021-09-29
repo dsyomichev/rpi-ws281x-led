@@ -1,5 +1,8 @@
 declare module 'detect-rpi' {
-  function isPI(): boolean;
+  /**
+   * Determines whether the device on which this is executed is a Raspberry PI or not.
+   */
+  function detect(): boolean;
 
-  export = isPI;
+  export = detect;
 }

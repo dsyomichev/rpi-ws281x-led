@@ -1,7 +1,9 @@
-import BaseChannel from '../base/BaseChannel';
-import BaseDriver from '../base/BaseDriver';
-import StripType from '../base/StripType';
+import { ws2811, ws2811_channel } from '../core/driver';
+import StripType from './StripType';
 
+/**
+ * Setup parameters for a channel.
+ */
 export interface ChannelOptions {
   gpio?: number;
   invert?: boolean;
@@ -10,6 +12,9 @@ export interface ChannelOptions {
   brightness?: number;
 }
 
+/**
+ * Additional data provided by the driver.
+ */
 export interface ChannelData {
   shifts: {
     w: number;
@@ -17,27 +22,48 @@ export interface ChannelData {
     g: number;
     b: number;
   };
-  gamma: Uint32Array | undefined;
+  gamma: Uint32Array;
 }
 
+/**
+ * A channel object used to setup and control a light strip.
+ */
 export default class Channel {
+  /**
+   * The GPIO pin to use.
+   */
   public readonly gpio: number;
 
+  /**
+   * Invert the output signal.
+   */
   public readonly invert: boolean;
 
+  /**
+   * The amount of leds on the strip.
+   */
   public readonly count: number;
 
+  /**
+   * Numerical constant representing the type of strip being used.
+   */
   public readonly type: StripType;
 
-  private self: BaseChannel;
+  private self: ws2811_channel;
 
-  private driver: BaseDriver;
+  private driver: ws2811;
 
-  public constructor(driver: BaseDriver, self: BaseChannel, options: ChannelOptions) {
+  /**
+   * Creates a new Channel using the provided configuration parameters.
+   * @param driver - The core driver creating this channel.
+   * @param self - The channel on the driver that this object will wrap.
+   * @param options - Configuration parameters for this channel.
+   */
+  public constructor(driver: ws2811, self: ws2811_channel, options: ChannelOptions) {
     this.self = self;
     this.driver = driver;
 
-    this.gpio = options.gpio || (this.driver.channel_array[0].gpionum === 18 ? 15 : 18);
+    this.gpio = options.gpio || (this.driver.channels[0].gpionum === 18 ? 13 : 18);
     this.self.gpionum = this.gpio;
 
     this.invert = options.invert || false;
@@ -53,23 +79,39 @@ export default class Channel {
     Object.defineProperty(this, 'driver', { enumerable: false });
   }
 
-  public get leds(): Uint32Array | undefined {
+  /**
+   * Get the Uint32 representation of the light strip.
+   */
+  public get leds(): Uint32Array {
+    if (!this.self.leds) throw new Error('Initialize the driver first.');
     return this.self.leds;
   }
 
-  public set leds(leds: Uint32Array | undefined) {
-    if (!leds) this.self.leds = new Uint32Array(this.count).fill(0x000000);
+  /**
+   * Set the values of each led on the strip.
+   */
+  public set leds(leds: Uint32Array) {
+    if (!this.self.leds) throw new Error('Initialize the driver first.');
     else this.self.leds = leds;
   }
 
+  /**
+   * Get the overall brightness of the strip.
+   */
   public get brightness(): number {
     return this.self.brightness;
   }
 
+  /**
+   * Set the strip to the provided brightness.
+   */
   public set brightness(brightness: number) {
     this.self.brightness = brightness;
   }
 
+  /**
+   * Get other various data on the channel.
+   */
   public get data(): ChannelData {
     return {
       shifts: {
@@ -78,7 +120,14 @@ export default class Channel {
         g: this.self.gshift,
         b: this.self.bshift,
       },
-      gamma: this.self.gamma,
+      gamma: this.self.gamma || new Uint32Array(256),
     };
+  }
+
+  /**
+   * Drivers render method for convenience. This will call render for all channels.
+   */
+  public render(): void {
+    this.driver.render();
   }
 }

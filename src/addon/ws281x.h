@@ -2,31 +2,33 @@
 
 extern "C"
 {
-    namespace lib_ws281x
+    namespace rpi_ws281x
     {
-#include <ws281x/ws2811.h>
-#include <ws281x/pwm.h>
+#include <rpi_ws281x/pwm.h>
+#include <rpi_ws281x/ws2811.h>
     }
 };
 
-class ws281x : public Napi::ObjectWrap<ws281x>
+class ws2811_node_t : public Napi::ObjectWrap<ws2811_node_t>
 {
 private:
-    /**
-     * Driver Members
-     **/
+    /*
+    * Driver Members
+    */
 
     static Napi::Value get_render_wait_time(const Napi::CallbackInfo &info);
 
     static Napi::Value get_rpi_hw(const Napi::CallbackInfo &info);
 
     static Napi::Value get_freq(const Napi::CallbackInfo &info);
-    static void set_freq(const Napi::CallbackInfo &info, const Napi::Value &value);
+    static void set_freq(const Napi::CallbackInfo &info,
+                         const Napi::Value &value);
 
     static Napi::Value get_dmanum(const Napi::CallbackInfo &info);
-    static void set_dmanum(const Napi::CallbackInfo &info, const Napi::Value &value);
+    static void set_dmanum(const Napi::CallbackInfo &info,
+                           const Napi::Value &value);
 
-    static Napi::Value get_channel_array(const Napi::CallbackInfo &info);
+    static Napi::Value get_channels(const Napi::CallbackInfo &info);
 
     static void init(const Napi::CallbackInfo &info);
 
@@ -38,9 +40,9 @@ private:
 
     static void set_custom_gamma_factor(const Napi::CallbackInfo &info);
 
-    /**
-     * Channel Members
-     **/
+    /*
+    * Channel Members
+    */
 
     static Napi::Value get_channel_gpionum(const Napi::CallbackInfo &info);
     static void set_channel_gpionum(const Napi::CallbackInfo &info);
@@ -71,10 +73,10 @@ private:
     static Napi::Value get_channel_gamma(const Napi::CallbackInfo &info);
 
 public:
-    /**
-     * NAPI Module Initialization
-     **/
+    /*
+    * NAPI Module Initialization
+    */
 
     static Napi::Object Init(Napi::Env env);
-    ws281x(const Napi::CallbackInfo &info);
+    ws2811_node_t(const Napi::CallbackInfo &info);
 };
