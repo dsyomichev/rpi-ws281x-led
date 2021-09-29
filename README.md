@@ -2,8 +2,6 @@
 
 A NodeJS Addon wrapper for the [rpi_ws281x](https://github.com/jgarff/rpi_ws281x) library. Contains type declarations.
 
-#### **This has not been tested with hardware yet.**
-
 ## Installing
 
 You can add this package to your own project using

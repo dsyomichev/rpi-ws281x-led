@@ -1,4 +1,4 @@
-import { ws2811, ws2811_channel } from '../core/driver';
+import { ws2811 } from '../core/driver';
 import StripType from './StripType';
 
 /**
@@ -49,7 +49,9 @@ export default class Channel {
    */
   public readonly type: StripType;
 
-  private self: ws2811_channel;
+  public leds: Uint32Array;
+
+  private id: number;
 
   private driver: ws2811;
 
@@ -59,54 +61,43 @@ export default class Channel {
    * @param self - The channel on the driver that this object will wrap.
    * @param options - Configuration parameters for this channel.
    */
-  public constructor(driver: ws2811, self: ws2811_channel, options: ChannelOptions) {
-    this.self = self;
+  public constructor(driver: ws2811, id: number, options: ChannelOptions) {
     this.driver = driver;
+    this.id = id;
 
-    this.gpio = options.gpio || (this.driver.channels[0].gpionum === 18 ? 13 : 18);
-    this.self.gpionum = this.gpio;
+    this.gpio = options.gpio || (this.driver.channels[id].gpionum === 18 ? 13 : 18);
+    this.driver.channels[id].gpionum = this.gpio;
 
     this.invert = options.invert || false;
-    this.self.invert = this.invert ? 1 : 0;
+    this.driver.channels[id].invert = this.invert ? 1 : 0;
 
     this.count = options.count;
-    this.self.count = this.count;
+    this.driver.channels[id].count = this.count;
 
     this.type = options.type || StripType.WS2812_STRIP;
-    this.self.strip_type = this.type;
+    this.driver.channels[id].strip_type = this.type;
 
-    Object.defineProperty(this, 'self', { enumerable: false });
+    this.driver.channels[id].brightness = options.brightness || 255;
+
+    this.leds = new Uint32Array(this.count);
+
+    Object.defineProperty(this, 'id', { enumerable: false });
     Object.defineProperty(this, 'driver', { enumerable: false });
-  }
-
-  /**
-   * Get the Uint32 representation of the light strip.
-   */
-  public get leds(): Uint32Array {
-    if (!this.self.leds) throw new Error('Initialize the driver first.');
-    return this.self.leds;
-  }
-
-  /**
-   * Set the values of each led on the strip.
-   */
-  public set leds(leds: Uint32Array) {
-    if (!this.self.leds) throw new Error('Initialize the driver first.');
-    else this.self.leds = leds;
+    Object.defineProperty(this, 'brightness', { enumerable: true });
   }
 
   /**
    * Get the overall brightness of the strip.
    */
   public get brightness(): number {
-    return this.self.brightness;
+    return this.driver.channels[this.id].brightness;
   }
 
   /**
    * Set the strip to the provided brightness.
    */
   public set brightness(brightness: number) {
-    this.self.brightness = brightness;
+    this.driver.channels[this.id].brightness = brightness;
   }
 
   /**
@@ -115,12 +106,12 @@ export default class Channel {
   public get data(): ChannelData {
     return {
       shifts: {
-        w: this.self.wshift,
-        r: this.self.rshift,
-        g: this.self.gshift,
-        b: this.self.bshift,
+        w: this.driver.channels[this.id].wshift,
+        r: this.driver.channels[this.id].rshift,
+        g: this.driver.channels[this.id].gshift,
+        b: this.driver.channels[this.id].bshift,
       },
-      gamma: this.self.gamma || new Uint32Array(256),
+      gamma: this.driver.channels[this.id].gamma || new Uint32Array(256),
     };
   }
 
@@ -128,6 +119,7 @@ export default class Channel {
    * Drivers render method for convenience. This will call render for all channels.
    */
   public render(): void {
+    this.driver.channels[this.id].leds = this.leds;
     this.driver.render();
   }
 }

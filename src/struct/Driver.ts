@@ -49,7 +49,7 @@ export default class Driver {
     }
 
     for (let i = 0; i < config.channels.length; i += 1) {
-      this.channels.push(new Channel(this.driver, this.driver.channels[i], config.channels[i]));
+      this.channels.push(new Channel(this.driver, i, config.channels[i]));
     }
 
     this.driver.init();
@@ -66,6 +66,10 @@ export default class Driver {
    * Render the current led buffers to their corresponding strips.
    */
   public render(): void {
+    for (let i = 0; i < this.channels.length; i += 1) {
+      this.driver.channels[i].leds = this.channels[i].leds;
+    }
+
     driver.render();
   }
 }

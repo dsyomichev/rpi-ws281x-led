@@ -428,4 +428,4 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     return exports;
 }
 
-NODE_API_MODULE(ws281x, Init);
+NODE_API_MODULE(rpi_ws281x_node, Init);

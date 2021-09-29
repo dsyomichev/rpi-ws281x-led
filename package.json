@@ -1,6 +1,6 @@
 {
   "name": "rpi-ws281x-led",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "declaration": true,
   "description": "A NodeJS Addon wrapper for the rpi_ws281x library.",
   "main": "dist/index.js",
