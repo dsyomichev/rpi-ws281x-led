@@ -1,20 +1,21 @@
 {
-  "name": "wasabi-driver",
-  "version": "0.0.1",
-  "private": true,
-  "description": "WS2812b lightstrip controller built around the rpi-ws2812b library.",
+  "name": "rpi-ws281x-led",
+  "version": "1.0.4",
+  "declaration": true,
+  "description": "A NodeJS Addon wrapper for the rpi_ws281x library. Contains type declarations using Typescript.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "gypfile": true,
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/wasabi-rpi/driver.git"
+    "url": "https://github.com/dsyomichev/rpi-ws281x-led"
   },
+  "license": "MIT",
   "scripts": {
-    "start": "node dist/index.js",
-    "build": "node-gyp build && tsc",
-    "configure": "node-gyp configure",
-    "rebuild": "node-gyp rebuild && tsc",
-    "clean": "node-gyp clean"
+    "compile": "tsc && cp ./types/rpi-ws281x-led/index.d.ts ./dist/index.d.ts",
+    "build": "node-gyp rebuild --silent",
+    "pretest": "npm run compile && npm run build",
+    "prepare": "npm run compile"
   },
   "author": "Daniel Syomichev <dsyomichev@gmail.com>",
   "dependencies": {
@@ -42,6 +43,6 @@
     "node-gyp": "^8.1.0",
     "prettier": "^2.3.0",
     "ts-node": "^9.1.1",
-    "typescript": "^4.2.4"
+    "typescript": "^4.4.3"
   }
 }

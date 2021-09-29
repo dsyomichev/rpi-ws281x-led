@@ -1,0 +1,14 @@
+.vscode/
+node_modules/
+src/
+build/
+types/
+.DS_Store
+*.env
+.eslintignore
+.eslintrc.json
+.gitignore
+.gitmodules
+.prettier.json
+tsconfig.eslint.json
+tsconfig.json

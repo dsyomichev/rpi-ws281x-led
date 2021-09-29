@@ -1,3 +1,6 @@
-import bindings from './util/bindings';
+import { StripType } from './core/ws281x';
+import SingleChannelDriver from './struct/SingleChannelDriver';
 
-console.log(bindings.constructor.name);
+export default SingleChannelDriver;
+
+export { StripType };
