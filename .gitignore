@@ -4,4 +4,4 @@ build/
 dist/
 
 .DS_Store
-.env
+*.env

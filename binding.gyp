@@ -2,18 +2,23 @@
     'conditions': [
         ['OS=="linux"', {
             'targets': [{
-                "target_name": "wrapper",
+                "target_name": "ws281x_wrapper",
                 "cflags!": ["-fno-exceptions"],
                 "cflags_cc!": ["-fno-exceptions"],
-                'dependencies': ['ws281x'],
-                'include_dirs': ["<!(node -p \"require('node-addon-api').include_dir\")"],
+                'sources': ['./src/core/addon.cc'],
+                'dependencies': ['ws281x_lib'],
+                'include_dirs': ["<!(node -p \"require('node-addon-api').include_dir\")", "./lib"],
                 'defines': ['NAPI_DISABLE_CPP_EXCEPTIONS'],
             }, {
-                'target_name': 'ws281x',
+                'target_name': 'ws281x_lib',
                 'type': 'static_library',
                 'sources': [
-                    # https://github.com/beyondscreen/node-rpi-ws281x-native/blob/master/binding.gyp
-                    "<!@(node -p \"require('fs').readdirSync('./src/rpi_ws281x').filter(f => (f.match(/\.c$/) && !f.match('main.c'))).map(f => 'src/rpi_ws281x/' + f).join(' ')\")"
+                    "./lib/ws281x/ws2811.c",
+                    "./lib/ws281x/pwm.c",
+                    "./lib/ws281x/dma.c",
+                    "./lib/ws281x/mailbox.c",
+                    "./lib/ws281x/rpihw.c",
+                    "./lib/ws281x//pcm.c"
                 ],
             }]
         },

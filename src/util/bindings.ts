@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import isRPI from 'detect-rpi';
 
-export default () => {
+export default (() => {
   const stub: { [key: string]: any } = {};
 
   if (!isRPI()) {
@@ -17,5 +17,7 @@ export default () => {
     return stub;
   }
 
-  return require('bindings')('wrapper');
-};
+  const WS281xWrapper = require('bindings')('ws281x_wrapper');
+
+  return new WS281xWrapper();
+})();
