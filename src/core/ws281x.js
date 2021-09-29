@@ -1,17 +1,8 @@
-import isRPI from 'detect-rpi';
-import StripType from '../struct/base/StripType';
-import mock from './mock';
+import rpi from 'detect-rpi';
+import MockDriver from '../mock/MockDriver';
 
-const supported = isRPI() && process.getuid && process.getuid() === 0;
-
-if (supported) {
-  // eslint-disable-next-line global-require
-  const driver = require('bindings')('ws281x');
-  if (driver.path) delete driver.path;
-
-  module.exports = driver;
+if (rpi() && process.getuid && process.getuid() === 0) {
+  module.exports = require('bindings')('ws281x');
 } else {
-  module.exports = mock;
+  module.exports = new MockDriver();
 }
-
-module.exports.StripType = StripType;

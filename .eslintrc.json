@@ -1,17 +1,17 @@
 {
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "project": "./tsconfig.eslint.json"
-    },
-    "plugins": ["@typescript-eslint"],
-    "extends": ["airbnb-typescript", "prettier", "plugin:prettier/recommended"],
-    "rules": {
-      "import/export": "off",
-      "class-methods-use-this": "off",
-      "@typescript-eslint/member-ordering": "error",
-      "@typescript-eslint/adjacent-overload-signatures": "error",
-      "quotes": ["error", "single", { "allowTemplateLiterals": false }]
-    }
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.eslint.json"
+  },
+  "plugins": ["@typescript-eslint"],
+  "extends": ["airbnb-typescript", "prettier", "plugin:prettier/recommended"],
+  "rules": {
+    "import/export": "off",
+    "class-methods-use-this": "off",
+    "@typescript-eslint/member-ordering": "error",
+    "@typescript-eslint/adjacent-overload-signatures": "error",
+    "quotes": ["error", "single", { "allowTemplateLiterals": false }],
+    "global-require": "off"
   }
-  
+}

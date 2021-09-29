@@ -1,8 +1,8 @@
 {
   "name": "rpi-ws281x-led",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "declaration": true,
-  "description": "A NodeJS Addon wrapper for the rpi_ws281x library. Contains type declarations using Typescript.",
+  "description": "A NodeJS Addon wrapper for the rpi_ws281x library.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "gypfile": true,
@@ -12,10 +12,12 @@
   },
   "license": "MIT",
   "scripts": {
-    "compile": "tsc && cp ./types/rpi-ws281x-led/index.d.ts ./dist/index.d.ts",
+    "compile": "tsc",
     "build": "node-gyp rebuild --silent",
     "pretest": "npm run compile && npm run build",
-    "prepare": "npm run compile"
+    "prepare": "npm run compile",
+    "test": "mocha -r ts-node/register 'test/**/*.ts'",
+    "test:skip": "mocha -r ts-node/register 'test/**/*.ts'"
   },
   "author": "Daniel Syomichev <dsyomichev@gmail.com>",
   "dependencies": {
@@ -25,21 +27,16 @@
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
-    "@types/chai": "^4.2.18",
-    "@types/ip": "^1.1.0",
     "@types/mocha": "^8.2.2",
     "@types/node": "^15.0.3",
     "@types/ws": "^7.4.5",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
-    "chai": "^4.3.4",
-    "dotenv": "^9.0.2",
     "eslint": "^7.26.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.4.0",
-    "mocha": "^8.4.0",
     "node-gyp": "^8.1.0",
     "prettier": "^2.3.0",
     "ts-node": "^9.1.1",

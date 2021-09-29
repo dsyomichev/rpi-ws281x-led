@@ -15,7 +15,7 @@ npm install rpi-ws281x-led
 and then importing it with
 
 ```typescript
-import SingleChannelDriver, { StripType } from 'rpi-ws281x-led';
+import Driver, { DriverConfiguration, ChannelData, StripType } from 'rpi-ws281x-led';
 ```
 
 ## Notes
@@ -24,9 +24,133 @@ import SingleChannelDriver, { StripType } from 'rpi-ws281x-led';
 
 - Root privledges are required for the driver to work, start the nodejs process as `sudo`.
 
-- A multi channel driver is not implemented as of this current version.
+## API
 
-## Strip Type
+### `Driver -> constructor(config: DriverConfiguration): Driver`
+
+Creates a new Driver with the provided configuration.
+
+**Configuration:**
+
+```typescript
+interface DriverConfiguration {
+  dma?: number; // Default: 10
+  frequency?: number; // Default: 800000
+  channels: ChannelOptions[];
+}
+
+interface ChannelOptions {
+  gpio?: number; // Default: 18 or 15
+  invert?: boolean; // Default: false
+  count: number;
+  type?: StripType; // Default: StripType.WS2812_STRIP
+  brightness?: number; // Default: 255
+}
+```
+
+- `dma` - The DMA channel to use for the leds.
+- `frequency` - The frequency of the PWM channel.
+- `gpio` - The GPIO pin the driver should use.
+- `invert` - Whether to invert the output signal.
+- `count` - The number of leds to initialize the driver with.
+- `type` - The type of the strip.
+- `brightness` - The brighness of the strip.
+
+A channel will be created for every object with a count in the configuration. The GPIO pin defaults to 18 and then 15 if it is taken.
+
+**Example:**
+
+```typescript
+import Driver from 'rpi-ws281x-led';
+
+const driver = new Driver({
+  channels: [{ count: 100 }],
+});
+```
+
+### `Driver -> finalize(): void`
+
+Shut the driver down.
+
+**Parameters:** None
+
+**Example:**
+
+```typescript
+driver.finalize();
+```
+
+### `Driver -> render(): void`
+
+Push the currently set brightness and leds to the actual strip.
+
+**Parameters:** None
+
+**Example:**
+
+```typescript
+driver.leds[10] = 0xff00ff;
+
+driver.render();
+```
+
+### `Channel -> get brighness(): number`
+
+Returns the current brighness of the strip.
+
+**Parameters:** None
+
+**Example:**
+
+```typescript
+console.log(driver.brighness);
+```
+
+### `Channel -> set brighness(brighness: number)`
+
+Set the overall brighness of the strip.
+
+**Parameters:**
+
+- `brighness` - A number between 0 and 255 to represent the overall brightness of the strip.
+
+**Example:**
+
+```typescript
+driver.brighness = 64;
+
+driver.render();
+```
+
+### `Channel -> get leds(): number`
+
+Returns the current array of leds on strip.
+
+**Parameters:** None
+
+**Example:**
+
+```typescript
+console.log(driver.leds);
+```
+
+### `Channel -> set leds(leds: Uint32Array)`
+
+Update the led values for the entire strip.
+
+**Parameters:**
+
+- `leds` - An array matching the size of the channels count to update with on the next render.
+
+**Example:**
+
+```typescript
+driver.leds = new Uint32Array(100).fill(0x00ff00);
+
+driver.render();
+```
+
+## StripType
 
 The StripType enum is defined as follows. Use these values or the enum to setup the strip.
 
@@ -49,126 +173,6 @@ enum StripType {
   SK6812_STRIP = WS2811_STRIP_GRB,
   SK6812W_STRIP = SK6812_STRIP_GRBW,
 }
-```
-
-## API
-
-### `constructor(dma, frequency, gpio, invert, count, type, brightness): SingleChannelDriver`
-
-Creates a new SingleChannelDriver with the provided configuration.
-
-**Parameters:**
-
-- `dma` - The DMA channel to use for the leds.
-- `frequency` - The frequency of the PWM channel.
-- `gpio` - The GPIO pin the driver should use.
-- `invert` - Whether to invert the output signal.
-- `count` - The number of leds to initialize the driver with.
-- `type` - The type of the strip.
-- `brightness` - The brighness of the strip.
-
-**Example:**
-
-```typescript
-import SingleChannelDriver, { StripType } from 'rpi-ws281x-led';
-
-const driver = new SingleChannelDriver(10, 800000, 18, false, 100, StripType.WS2812_STRIP, 255);
-```
-
-### `get brighness(): number`
-
-Returns the current brighness of the strip.
-
-**Parameters:** None
-
-**Example:**
-
-```typescript
-console.log(driver.brighness);
-```
-
-### `set brighness(brighness: number)`
-
-Set the overall brighness of the strip.
-
-**Parameters:**
-
-- `brighness` - A number between 0 and 255 to represent the overall brightness of the strip.
-
-**Example:**
-
-```typescript
-driver.brighness = 64;
-
-driver.render();
-```
-
-### `get leds(): number`
-
-Returns the current array of leds on strip.
-
-**Parameters:** None
-
-**Example:**
-
-```typescript
-console.log(driver.leds);
-```
-
-### `set leds(leds: Uint32Array)`
-
-Update the led values for the entire strip.
-
-**Parameters:**
-
-- `leds` - An array matching the size of the channels count to update with on the next render.
-
-**Example:**
-
-```typescript
-driver.leds = new Uint32Array(100).fill(0x00ff00);
-
-driver.render();
-```
-
-### `initialize(): void`
-
-Initialize the driver, creating the leds array.
-
-**Parameters:** None
-
-**Example:**
-
-```typescript
-const driver = new SingleChannelDriver(10, 800000, 18, false, 100, StripType.WS2812_STRIP, 255);
-
-driver.initialize();
-```
-
-### `finalize(): void`
-
-Shut the driver down.
-
-**Parameters:** None
-
-**Example:**
-
-```typescript
-driver.finalize();
-```
-
-### `render(): void`
-
-Push the currently set brightness and leds to the actual strip.
-
-**Parameters:** None
-
-**Example:**
-
-```typescript
-driver.leds[10] = 0xff00ff;
-
-driver.render();
 ```
 
 ## License

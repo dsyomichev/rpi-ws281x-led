@@ -1,8 +1,4 @@
-import BaseDriver from '../struct/base/BaseDriver';
-import BaseChannel from '../struct/base/BaseChannel';
-import StripType from '../struct/base/StripType';
+import BaseDriver from '../base/BaseDriver';
 
-export { BaseDriver, BaseChannel, StripType };
-
-declare const ws281x: BaseDriver;
-export default ws281x;
+declare const driver: BaseDriver;
+export default driver;

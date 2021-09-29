@@ -1,6 +1,6 @@
-import { StripType } from './core/ws281x';
-import SingleChannelDriver from './struct/SingleChannelDriver';
+import Driver, { DriverConfiguration } from './struct/Driver';
+import { ChannelData } from './struct/Channel';
+import StripType from './base/StripType';
 
-export default SingleChannelDriver;
-
-export { StripType };
+export default Driver;
+export { DriverConfiguration, ChannelData, StripType };
