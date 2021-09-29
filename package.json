@@ -1,0 +1,27 @@
+{
+  "name": "wasabi-driver",
+  "version": "0.0.1",
+  "private": true,
+  "description": "WS2812b lightstrip controller built around the rpi-ws2812b library.",
+  "main": "lib/index.js",
+  "gypfile": true,
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/wasabi-rpi/driver.git"
+  },
+  "scripts": {
+    "start": "node lib/index.js",
+    "build": "node-gyp build",
+    "configure": "node-gyp configure",
+    "rebuild": "node-gyp rebuild",
+    "clean": "node-gyp clean"
+  },
+  "author": "Daniel Syomichev <dsyomichev@gmail.com>",
+  "dependencies": {
+    "bindings": "^1.5.0",
+    "node-addon-api": "^4.0.0"
+  },
+  "devDependencies": {
+    "node-gyp": "^8.1.0"
+  }
+}
