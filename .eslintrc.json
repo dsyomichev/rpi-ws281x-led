@@ -12,6 +12,7 @@
     "@typescript-eslint/member-ordering": "error",
     "@typescript-eslint/adjacent-overload-signatures": "error",
     "quotes": ["error", "single", { "allowTemplateLiterals": false }],
-    "global-require": "off"
+    "global-require": "off",
+    "import/no-extraneous-dependencies": "off"
   }
 }

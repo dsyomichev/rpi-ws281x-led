@@ -1,6 +1,6 @@
 {
   "name": "rpi-ws281x-led",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "declaration": true,
   "description": "A NodeJS Addon wrapper for the rpi_ws281x library.",
   "main": "dist/index.js",
@@ -12,7 +12,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "compile": "tsc",
+    "compile": "tsc && node util/dts.js",
     "build": "node-gyp rebuild --silent",
     "pretest": "npm run compile && npm run build",
     "prepare": "npm run compile",
@@ -37,6 +37,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.4.0",
+    "glob": "^7.1.6",
     "node-gyp": "^8.1.0",
     "prettier": "^2.3.0",
     "ts-node": "^9.1.1",
