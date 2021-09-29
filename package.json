@@ -3,25 +3,45 @@
   "version": "0.0.1",
   "private": true,
   "description": "WS2812b lightstrip controller built around the rpi-ws2812b library.",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "gypfile": true,
   "repository": {
     "type": "git",
     "url": "git+ssh://git@gitlab.com/wasabi-rpi/driver.git"
   },
   "scripts": {
-    "start": "node lib/index.js",
-    "build": "node-gyp build",
+    "start": "node dist/index.js",
+    "build": "node-gyp build && tsc",
     "configure": "node-gyp configure",
-    "rebuild": "node-gyp rebuild",
+    "rebuild": "node-gyp rebuild && tsc",
     "clean": "node-gyp clean"
   },
   "author": "Daniel Syomichev <dsyomichev@gmail.com>",
   "dependencies": {
     "bindings": "^1.5.0",
+    "detect-rpi": "^1.4.0",
     "node-addon-api": "^4.0.0"
   },
   "devDependencies": {
-    "node-gyp": "^8.1.0"
+    "@tsconfig/recommended": "^1.0.1",
+    "@types/chai": "^4.2.18",
+    "@types/ip": "^1.1.0",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "^15.0.3",
+    "@types/ws": "^7.4.5",
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/parser": "^4.23.0",
+    "chai": "^4.3.4",
+    "dotenv": "^9.0.2",
+    "eslint": "^7.26.0",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "mocha": "^8.4.0",
+    "node-gyp": "^8.1.0",
+    "prettier": "^2.3.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
   }
 }
