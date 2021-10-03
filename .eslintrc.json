@@ -5,7 +5,7 @@
     "project": "./tsconfig.eslint.json"
   },
   "plugins": ["@typescript-eslint"],
-  "extends": ["airbnb-typescript", "prettier", "plugin:prettier/recommended"],
+  "extends": ["airbnb-typescript/base", "prettier", "plugin:prettier/recommended"],
   "rules": {
     "import/export": "off",
     "class-methods-use-this": "off",
