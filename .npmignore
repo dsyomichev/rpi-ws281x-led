@@ -1,6 +1,8 @@
 .vscode/
 node_modules/
-src/
+src/core
+src/struct
+src/index.ts
 build/
 util/
 types/
