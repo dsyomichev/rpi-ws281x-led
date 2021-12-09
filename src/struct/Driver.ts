@@ -1,17 +1,17 @@
 import driver, { ws2811 } from '../core/driver';
-import Channel, { ChannelOptions } from './Channel';
+import Channel, { ChannelConfiguration } from './Channel';
 
 /**
- * Configuration options for the the driver.
+ * Parameters to setup the driver.
  */
 export interface DriverConfiguration {
   dma?: number;
   frequency?: number;
-  channels: ChannelOptions[];
+  channels: ChannelConfiguration[];
 }
 
 /**
- * A driver to control led light strips.
+ * A driver used to setup and  control led light strips.
  */
 export default class Driver {
   /**
@@ -20,15 +20,18 @@ export default class Driver {
   public readonly dma: number;
 
   /**
-   * The frequency that has been set for PWM.
+   * The frequency for PWM.
    */
   public readonly frequency: number;
 
   /**
-   * Each channel corresponds to a strip and gpio output pin.
+   * Array of each channel object.
    */
   public readonly channels: Channel[] = [];
 
+  /**
+   * The driver wrapper.
+   */
   private readonly driver: ws2811 = driver;
 
   /**
@@ -49,7 +52,7 @@ export default class Driver {
     }
 
     for (let i = 0; i < config.channels.length; i += 1) {
-      this.channels.push(new Channel(this.driver, i, config.channels[i]));
+      this.channels.push(new Channel(i, config.channels[i]));
     }
 
     this.driver.init();

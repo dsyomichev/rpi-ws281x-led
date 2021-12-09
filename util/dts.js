@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 
 const compiled = glob.sync(path.join(__dirname, '../dist/**/*.d.ts'), {});
-const src = glob.sync(path.join(__dirname, '../src/core/**/*.d.ts'), {});
 
 /**
  *  Trims the import statements from a .d.ts file.
@@ -45,7 +44,7 @@ const trimExports = (declaration) => {
     const end = statement.substring(statement.length - 1);
 
     if (end === '{') {
-      const replacement = statement.replace('export default ', '\ndeclare ').replace('export ', '\ndeclare ');
+      const replacement = statement.replace('export default ', 'declare ').replace('export ', 'declare ');
       final = final.replace(statement, replacement);
     } else if (end === ';') {
       final = final.replace(statement, '');
@@ -58,27 +57,20 @@ const trimExports = (declaration) => {
 };
 
 /**
- *  Removes all import/export statements from a file.
+ * Removes all import/export statements from a file.
  * @param {*} declaration - String representation of a .d.ts file.
  * @returns String - File without import/export statements.
  */
 const trim = (declaration) => {
   let final = trimImports(declaration);
   final = trimExports(final);
-  final += '\n\n';
+  final += '\n';
   return final;
 };
 
 let final = '';
 let ex = '';
 let index;
-
-src.forEach((l) => {
-  let file = fs.readFileSync(l).toString();
-  file = trim(file);
-
-  final += file;
-});
 
 compiled.forEach((l) => {
   let file = fs.readFileSync(l).toString();

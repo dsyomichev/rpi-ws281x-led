@@ -1,10 +1,10 @@
-import { ws2811 } from '../core/driver';
+import driver, { ws2811 } from '../core/driver';
 import StripType from './StripType';
 
 /**
- * Setup parameters for a channel.
+ * Channel setup parameters.
  */
-export interface ChannelOptions {
+export interface ChannelConfiguration {
   gpio?: number;
   invert?: boolean;
   count: number;
@@ -40,7 +40,7 @@ export default class Channel {
   public readonly invert: boolean;
 
   /**
-   * The amount of leds on the strip.
+   * The number of leds on the strip.
    */
   public readonly count: number;
 
@@ -54,20 +54,27 @@ export default class Channel {
    */
   public leds: Uint32Array;
 
+  /**
+   * The numerical representation of the brightness. Ranges from 0-255.
+   */
   public brightness: number;
 
+  /**
+   * The channel number, either 0 or 1.
+   */
   private id: number;
 
-  private driver: ws2811;
+  /**
+   * The driver wrapper.
+   */
+  private driver: ws2811 = driver;
 
   /**
    * Creates a new Channel using the provided configuration parameters.
-   * @param driver - The core driver creating this channel.
-   * @param self - The channel on the driver that this object will wrap.
+   * @param id - The channel id on the driver that this object will wrap.
    * @param options - Configuration parameters for this channel.
    */
-  public constructor(driver: ws2811, id: number, options: ChannelOptions) {
-    this.driver = driver;
+  public constructor(id: number, options: ChannelConfiguration) {
     this.id = id;
 
     this.gpio = options.gpio || (this.driver.channels[id].gpionum === 18 ? 13 : 18);
@@ -92,7 +99,7 @@ export default class Channel {
   }
 
   /**
-   * Get other various data on the channel.
+   * Get data provided by the driver.
    */
   public get data(): ChannelData {
     return {
@@ -107,7 +114,7 @@ export default class Channel {
   }
 
   /**
-   * Drivers render method for convenience. This will call render for all channels.
+   * Pushes this channel's led values to the strip.
    */
   public render(): void {
     this.driver.channels[this.id].brightness = this.brightness;

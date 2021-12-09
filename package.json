@@ -1,6 +1,6 @@
 {
   "name": "rpi-ws281x-led",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "declaration": true,
   "description": "A NodeJS Addon wrapper for the rpi_ws281x library.",
   "main": "dist/index.js",
@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "compile": "rm -rf dist && tsc && node util/",
+    "compile": "rm -rf dist && tsc && node util/dts.js",
     "build": "node-gyp rebuild --silent",
     "pretest": "npm run compile && npm run build",
     "prepare": "npm run compile"
