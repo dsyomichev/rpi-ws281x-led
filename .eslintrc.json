@@ -5,16 +5,5 @@
     "project": "./tsconfig.eslint.json"
   },
   "plugins": ["@typescript-eslint"],
-  "extends": ["airbnb-typescript/base", "prettier", "plugin:prettier/recommended"],
-  "rules": {
-    "import/export": "off",
-    "class-methods-use-this": "off",
-    "@typescript-eslint/member-ordering": "error",
-    "@typescript-eslint/adjacent-overload-signatures": "error",
-    "quotes": ["error", "single", { "allowTemplateLiterals": false }],
-    "global-require": "off",
-    "import/no-extraneous-dependencies": "off",
-    "@typescript-eslint/naming-convention": "off",
-    "new-cap": "off"
-  }
+  "extends": ["airbnb-typescript/base", "prettier", "plugin:prettier/recommended"]
 }

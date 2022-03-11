@@ -13,7 +13,11 @@ npm install rpi-ws281x-led
 and then importing it with
 
 ```typescript
-import Driver from 'rpi-ws281x-led';
+import Driver, { Channel, StripType } from 'rpi-ws281x-led';
+```
+
+```javascript
+const Driver = require('rpi-ws281x-led').default;
 ```
 
 ## Notes
@@ -40,7 +44,7 @@ const driver = new Driver({
       brightness: 64,
     },
     {
-      gpio: 13,
+      gpio: 12,
       count: 200,
       type: StripType.WS2811_STRIP_RGB,
       brightness: 255,
@@ -48,14 +52,14 @@ const driver = new Driver({
   ],
 });
 
-const channel1 = driver.channels[0];
+const channel = driver.channels[0];
 
-channel1.leds[50] = 0xffff00;
-channel1.brightness = 255;
-channel1.render(); // OR driver.render();
+channel.leds[50] = 0xffff00;
+channel.brightness = 255;
+channel.render(); // Push a single channel to the strip.
 
-channel1.leds = new Uint32Array(100).fill(0x000000);
-channel1.render();
+channel.leds = new Uint32Array(channel.count).fill(0x000000);
+driver.render(); // Push both channels to the strip.
 ```
 
 ## Driver Configuration
@@ -66,17 +70,17 @@ Creates a new Driver with the provided configuration.
 
 **Params:**
 
-- 'config' - The configurations for the driver.
+- `config` - The configurations for the driver.
 
 ```typescript
 interface DriverConfiguration {
   dma?: number; // Default: 10
   frequency?: number; // Default: 800000
-  channels: ChannelOptions[];
+  channels: [ChannelConfiguration] | [ChannelConfiguration, ChannelConfiguration];
 }
 
 interface ChannelConfiguration {
-  gpio?: number; // Default: 18 or 13
+  gpio?: number; // Default: 18 or 12
   invert?: boolean; // Default: false
   count: number;
   type?: StripType; // Default: StripType.WS2812_STRIP
@@ -97,11 +101,11 @@ interface ChannelConfiguration {
 - `type` - The type of the strip.
 - `brightness` - The brighness of the strip.
 
-A channel will be created for every object with a count in the configuration. The GPIO pin defaults to 18 and then 13 if it is taken.
+A channel will be created for every object with a count in the configuration. The GPIO pin defaults to 18 and then 12 if it is taken.
 
 ## StripType
 
-The StripType enum is defined as follows. Use these values or the enum to setup the strip.
+The StripType enum is defined as follows. Use these values or the enum definition to setup the strip.
 
 ```typescript
 enum StripType {

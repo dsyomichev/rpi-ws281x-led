@@ -1,28 +1,43 @@
 {
   "name": "rpi-ws281x-led",
-  "version": "1.3.0",
-  "declaration": true,
-  "description": "A NodeJS Addon wrapper for the rpi_ws281x library.",
+  "version": "2.0.0",
+  "description": "A driver for controlling LED lightstrips build on top of rpi_ws281x.",
+  "license": "MIT",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "gypfile": true,
+  "declaration": true,
+  "types": "dist/index.d.ts",
   "engines": {
     "node": ">=12"
   },
+  "scripts": {
+    "compile": "rm -rf dist && tsc",
+    "build": "node-gyp build --silent",
+    "pretest": "npm run compile && npm run build",
+    "prepare": "npm run compile"
+  },
   "homepage": "https://github.com/dsyomichev/rpi-ws281x-led",
-  "bugs": "https://github.com/dsyomichev/rpi-ws281x-led/issues",
+  "bugs": {
+    "url": "https://github.com/dsyomichev/rpi-ws281x-led/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/dsyomichev/rpi-ws281x-led"
   },
-  "license": "MIT",
-  "scripts": {
-    "compile": "rm -rf dist && tsc && node util/dts.js",
-    "build": "node-gyp rebuild --silent",
-    "pretest": "npm run compile && npm run build",
-    "prepare": "npm run compile"
+  "author": {
+    "name": "Daniel Syomichev",
+    "email": "dsyomichev@gmail.com"
   },
-  "author": "Daniel Syomichev <dsyomichev@gmail.com>",
+  "files": [
+    "dist/**/*",
+    "lib/**/*",
+    "types/**/*",
+    "src/addon/**/*",
+    "package.json",
+    "binding.gyp",
+    "LICENSE.md",
+    "README.md"
+  ],
   "dependencies": {
     "bindings": "^1.5.0",
     "detect-rpi": "^1.4.0",
@@ -31,7 +46,6 @@
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
     "@types/node": "^15.0.3",
-    "@types/ws": "^7.4.5",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
     "eslint": "^7.26.0",
@@ -39,16 +53,20 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.4.0",
-    "glob": "^7.1.6",
     "node-gyp": "^8.1.0",
     "prettier": "^2.3.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.4.3"
   },
   "keywords": [
+    "raspberry",
+    "pi",
+    "rpi",
+    "ws2811",
+    "ws281x",
     "led",
     "strip",
-    "ws281x",
-    "driver"
+    "driver",
+    "neopixel"
   ]
 }

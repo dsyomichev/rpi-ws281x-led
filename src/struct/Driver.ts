@@ -1,4 +1,4 @@
-import driver, { ws2811 } from '../core/driver';
+import driver, { rpi_ws281x_node } from '../core/rpi_ws281x_node';
 import Channel, { ChannelConfiguration } from './Channel';
 
 /**
@@ -7,7 +7,7 @@ import Channel, { ChannelConfiguration } from './Channel';
 export interface DriverConfiguration {
   dma?: number;
   frequency?: number;
-  channels: ChannelConfiguration[];
+  channels: [ChannelConfiguration] | [ChannelConfiguration, ChannelConfiguration];
 }
 
 /**
@@ -32,7 +32,7 @@ export default class Driver {
   /**
    * The driver wrapper.
    */
-  private readonly driver: ws2811 = driver;
+  private readonly driver: rpi_ws281x_node = driver;
 
   /**
    * Creates a new light strip driver.
@@ -61,6 +61,7 @@ export default class Driver {
   /**
    * Shut down the driver. Use before exiting the program.
    */
+  // eslint-disable-next-line class-methods-use-this
   public finalize(): void {
     driver.fini();
   }
@@ -70,8 +71,8 @@ export default class Driver {
    */
   public render(): void {
     for (let i = 0; i < this.channels.length; i += 1) {
-      this.driver.channels[i].leds = this.channels[i].leds;
-      this.driver.channels[i].brightness = this.channels[i].brightness;
+      this.driver.channel[i].leds = this.channels[i].leds;
+      this.driver.channel[i].brightness = this.channels[i].brightness;
     }
 
     driver.render();
