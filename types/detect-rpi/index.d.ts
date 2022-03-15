@@ -1,3 +1,3 @@
 declare module 'detect-rpi' {
-  export default function detectRPi(): boolean;
+  export default function detect(): boolean;
 }

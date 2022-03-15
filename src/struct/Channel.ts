@@ -1,11 +1,12 @@
-import driver, { rpi_ws281x_node } from '../core/rpi_ws281x_node';
+import { ws2811 } from 'rpi-ws281x-node';
 import StripType from './StripType';
+import driver from '../loader';
 
 /**
  * Channel setup parameters.
  */
 export interface ChannelConfiguration {
-  gpio?: number;
+  gpio: number;
   invert?: boolean;
   count: number;
   type?: StripType;
@@ -13,18 +14,17 @@ export interface ChannelConfiguration {
 }
 
 /**
- * Additional color data provided by the controller.
+ * Additional data provided by the driver.
  */
-export interface ChannelColorData {
+export interface ChannelData {
   shifts: {
     w: number;
     r: number;
     g: number;
     b: number;
   };
-  gamma: Uint32Array;
+  gamma?: Uint8Array;
 }
-
 /**
  * An object used to control a single channel on the controller.
  */
@@ -52,7 +52,7 @@ export default class Channel {
   /**
    * Array representation of the strip containing number values for each color.
    */
-  public leds: Uint32Array;
+  public leds?: Uint32Array;
 
   /**
    * The numerical representation of the brightness.
@@ -60,14 +60,14 @@ export default class Channel {
   public brightness: number;
 
   /**
-   * The channel number used to distinguish different channels.
+   * The number used to distinguish different channels.
    */
-  private id: number;
+  private index: number;
 
   /**
    * The controller used to control the lightstrip.
    */
-  private driver: rpi_ws281x_node = driver;
+  private driver: ws2811 = driver;
 
   /**
    * Creates a new Channel using the provided configuration parameters.
@@ -75,42 +75,42 @@ export default class Channel {
    * @param id - The channel id on the driver that this object will wrap.
    * @param options - Configuration parameters for this channel.
    */
-  public constructor(id: number, options: ChannelConfiguration) {
-    this.id = id;
+  public constructor(index: number, options: ChannelConfiguration) {
+    this.index = index;
 
-    this.gpio = options.gpio || (this.driver.channel[id === 0 ? 1 : 0].gpionum === 18 ? 12 : 18);
-    this.driver.channel[id].gpionum = this.gpio;
+    this.gpio = options.gpio || 18;
+    this.driver.channel[index].gpionum = this.gpio;
 
     this.invert = options.invert || false;
-    this.driver.channel[id].invert = this.invert ? 1 : 0;
+    this.driver.channel[index].invert = this.invert ? 1 : 0;
 
-    this.count = options.count;
-    this.driver.channel[id].count = this.count;
+    this.count = this.gpio === 0 ? 0 : options.count;
+    this.driver.channel[index].count = this.count;
 
     this.type = options.type || StripType.WS2812_STRIP;
-    this.driver.channel[id].strip_type = this.type;
+    this.driver.channel[index].strip_type = this.type;
 
     this.brightness = options.brightness || 255;
-    this.driver.channel[id].brightness = this.brightness;
+    this.driver.channel[index].brightness = this.brightness;
 
     this.leds = new Uint32Array(this.count).fill(0x000000);
 
-    Object.defineProperty(this, 'id', { enumerable: false });
+    Object.defineProperty(this, 'index', { enumerable: false });
     Object.defineProperty(this, 'driver', { enumerable: false });
   }
 
   /**
    * Get data provided by the driver.
    */
-  public get data(): ChannelColorData {
+  public get data(): ChannelData {
     return {
       shifts: {
-        w: this.driver.channel[this.id].wshift,
-        r: this.driver.channel[this.id].rshift,
-        g: this.driver.channel[this.id].gshift,
-        b: this.driver.channel[this.id].bshift,
+        w: this.driver.channel[this.index].wshift,
+        r: this.driver.channel[this.index].rshift,
+        g: this.driver.channel[this.index].gshift,
+        b: this.driver.channel[this.index].bshift,
       },
-      gamma: this.driver.channel[this.id].gamma || new Uint32Array(256),
+      gamma: this.driver.channel[this.index].gamma || new Uint8Array(256),
     };
   }
 
@@ -118,8 +118,15 @@ export default class Channel {
    * Pushes this channel's led values to the strip.
    */
   public render(): void {
-    this.driver.channel[this.id].brightness = this.brightness;
-    this.driver.channel[this.id].leds = this.leds;
+    this.driver.channel[this.index].brightness = this.brightness;
+    this.driver.channel[this.index].leds = this.leds;
     this.driver.render();
+  }
+
+  /**
+   * Shut down the driver.
+   */
+  public finalize(): void {
+    this.driver.fini();
   }
 }

@@ -1,5 +1,6 @@
-import driver, { rpi_ws281x_node } from '../core/rpi_ws281x_node';
+import { ws2811 } from 'rpi-ws281x-node';
 import Channel, { ChannelConfiguration } from './Channel';
+import driver from '../loader';
 
 /**
  * Parameters to setup the driver.
@@ -11,7 +12,7 @@ export interface DriverConfiguration {
 }
 
 /**
- * A driver used to setup and  control led light strips.
+ * A driver used to setup and control led light strips.
  */
 export default class Driver {
   /**
@@ -27,33 +28,36 @@ export default class Driver {
   /**
    * Array of each channel object.
    */
-  public readonly channels: Channel[] = [];
+  public readonly channels: [Channel] | [Channel, Channel];
 
   /**
-   * The driver wrapper.
+   * The controller used to control the lightstrip.
    */
-  private readonly driver: rpi_ws281x_node = driver;
+  private readonly driver: ws2811 = driver;
 
   /**
    * Creates a new light strip driver.
    * @param config - The configuration for this driver.
    */
-  public constructor(config: DriverConfiguration) {
+  public constructor(options: DriverConfiguration) {
     Object.defineProperty(this, 'driver', { enumerable: false });
 
-    this.dma = config.dma || 10;
+    this.dma = options.dma || 10;
     this.driver.dmanum = this.dma;
 
-    this.frequency = config.frequency || 800000;
+    this.frequency = options.frequency || 800000;
     this.driver.freq = this.frequency;
 
-    if (config.channels.length < 1 || config.channels.length > 2) {
-      throw new Error('Invalid number of channels to create.');
+    const channels: Channel[] = [];
+
+    for (let i = 0; i < 2; i += 1) {
+      const channel: ChannelConfiguration = options.channels[i];
+      // eslint-disable-next-line no-continue
+      if (options.channels[i] !== undefined && !channel.gpio && i === 1) continue;
+      if (channel && channel.count > 0) channels[i] = new Channel(i, channel || { count: 0, gpio: 0 });
     }
 
-    for (let i = 0; i < config.channels.length; i += 1) {
-      this.channels.push(new Channel(i, config.channels[i]));
-    }
+    this.channels = channels as [Channel] | [Channel, Channel];
 
     this.driver.init();
   }

@@ -1,19 +1,16 @@
 {
   "name": "rpi-ws281x-led",
-  "version": "2.0.0",
-  "description": "A driver for controlling LED lightstrips build on top of rpi_ws281x.",
+  "version": "2.0.6",
+  "description": "NodeJS based driver for controlling WS281x light strips.",
   "license": "MIT",
   "main": "dist/index.js",
-  "gypfile": true,
   "declaration": true,
   "types": "dist/index.d.ts",
   "engines": {
-    "node": ">=12"
+    "node": ">=10.20.0"
   },
   "scripts": {
     "compile": "rm -rf dist && tsc",
-    "build": "node-gyp build --silent",
-    "pretest": "npm run compile && npm run build",
     "prepare": "npm run compile"
   },
   "homepage": "https://github.com/dsyomichev/rpi-ws281x-led",
@@ -22,26 +19,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsyomichev/rpi-ws281x-led"
+    "url": "git+https://github.com/dsyomichev/rpi-ws281x-led.git"
   },
   "author": {
     "name": "Daniel Syomichev",
-    "email": "dsyomichev@gmail.com"
+    "email": "dsyomichev@gmail.com",
+    "url": "https://github.com/dsyomichev"
   },
   "files": [
     "dist/**/*",
-    "lib/**/*",
-    "types/**/*",
-    "src/addon/**/*",
     "package.json",
-    "binding.gyp",
     "LICENSE.md",
     "README.md"
   ],
   "dependencies": {
-    "bindings": "^1.5.0",
     "detect-rpi": "^1.4.0",
-    "node-addon-api": "^4.0.0"
+    "rpi-ws281x-node": "^1.0.2"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
@@ -53,7 +46,6 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.4.0",
-    "node-gyp": "^8.1.0",
     "prettier": "^2.3.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.4.3"
